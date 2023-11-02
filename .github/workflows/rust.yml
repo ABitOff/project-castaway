@@ -1,0 +1,40 @@
+name: "Build, Test, Cover"
+
+on: ["push", "pull_request"]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: true
+
+jobs:
+  build-test-cover:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - run: cargo install cargo-tarpaulin
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
+    - name: Coverage
+      run: cargo +nightly tarpaulin --all-features --color always --count -o Lcov -t 120 -v
+    - name: Upload to codecov.io
+      uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: true
+        flag-name: build-${{ matrix.os }}
+        parallel: true
+
+  finish:
+    needs: build-test-cover
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@v2
+      with:
+        parallel-finished: true
+        carryforward: "build-ubuntu-latest,build-windows-latest,build-macos-latest"

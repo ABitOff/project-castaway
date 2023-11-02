@@ -22,19 +22,6 @@ jobs:
     - name: Coverage
       run: cargo tarpaulin --all-features --color always --count -o Lcov -t 120 -v
     - name: Upload to codecov.io
-      uses: codecov/codecov-action@v2
-      with:
-        fail_ci_if_error: true
-        flag-name: build-${{ matrix.os }}
-        parallel: true
-
-  finish:
-    needs: build-test-cover
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@v2
-      with:
-        parallel-finished: true
-        carryforward: "build-ubuntu-latest,build-windows-latest,build-macos-latest"
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

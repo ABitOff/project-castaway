@@ -8,6 +8,6 @@ If you'd like to help, feel free to reach out!
 
 ## :muscle: Contributors
 
-![The list of contributors to Project Castaway.](https://contrib.rocks/image?repo=ABitOff/project-castaway)
+[![The list of contributors to Project Castaway.](https://contrib.rocks/image?repo=ABitOff/project-castaway)](https://github.com/ABitOff/project-castaway/graphs/contributors)
 
 To be continued... :)

@@ -31,6 +31,7 @@ jobs:
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     - name: Install tarpaulin
       run: cargo install cargo-tarpaulin
+      continue-on-error: true
     - name: Build
       run: cargo build --lib --examples --tests --verbose
     - name: Run tests

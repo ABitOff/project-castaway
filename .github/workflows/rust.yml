@@ -19,8 +19,19 @@ jobs:
       uses: humbletim/install-vulkan-sdk@v1.1.1
       with:
         cache: true
-    - name: Tnstall tarpaulin
+    - name: Fetch cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - name: Install tarpaulin
       run: cargo install cargo-tarpaulin
+      continue-on-error: true
     - name: Build
       run: cargo build --lib --examples --tests --verbose
     - name: Run tests

@@ -1,4 +1,6 @@
-# Project Castaway ![Build, Test, Cover badge](https://github.com/ABitOff/project-castaway/actions/workflows/rust.yml/badge.svg) [![codecov coverage badge](https://codecov.io/gh/ABitOff/project-castaway/graph/badge.svg?token=QTIQRMGM8K)](https://codecov.io/gh/ABitOff/project-castaway) [![Discord Server Join Button](https://dcbadge.vercel.app/api/server/eRxSmhaxv4?style=flat&compact=true)](https://discord.gg/eRxSmhaxv4) [![FOSSA Status badge](https://app.fossa.com/api/projects/git%2Bgithub.com%2FABitOff%2Fproject-castaway.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2FABitOff%2Fproject-castaway?ref=badge_small)
+# Project Castaway
+
+![Build, Test, Cover badge](https://github.com/ABitOff/project-castaway/actions/workflows/rust.yml/badge.svg) [![codecov coverage badge](https://codecov.io/gh/ABitOff/project-castaway/graph/badge.svg?token=QTIQRMGM8K)](https://codecov.io/gh/ABitOff/project-castaway) [![Discord Server Join Button](https://dcbadge.vercel.app/api/server/eRxSmhaxv4?style=flat&compact=true)](https://discord.gg/eRxSmhaxv4) [![FOSSA Status badge](https://app.fossa.com/api/projects/git%2Bgithub.com%2FABitOff%2Fproject-castaway.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2FABitOff%2Fproject-castaway?ref=badge_small)
 
 Project Castaway is a Vulkan-based rendering engine built on Rust with a focus on native raytracing.
 

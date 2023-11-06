@@ -40,7 +40,7 @@ pub const VERSION_1_1: Version = Version::from_major_minor(1, 1);
 pub const VERSION_1_2: Version = Version::from_major_minor(1, 2);
 pub const VERSION_1_3: Version = Version::from_major_minor(1, 3);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Version {
     pub variant: u32,
     pub major: u32,
@@ -85,4 +85,21 @@ impl Version {
     pub(crate) fn make_api_version(&self) -> u32 {
         ash::vk::make_api_version(self.variant, self.major, self.minor, self.patch)
     }
+}
+
+#[test]
+fn test_version() {
+    assert_eq!(
+        Version::default(),
+        Version {
+            variant: 0,
+            major: 0,
+            minor: 0,
+            patch: 0
+        }
+    );
+    assert_eq!(
+        Version::new(2_087_830_939, 3_835_216_933, 42_366_749, 651_707_963).make_api_version(),
+        ash::vk::make_api_version(2_087_830_939, 3_835_216_933, 42_366_749, 651_707_963)
+    );
 }

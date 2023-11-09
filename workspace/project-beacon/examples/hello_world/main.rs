@@ -2,19 +2,19 @@ use std::time::Duration;
 
 use anyhow::Result;
 use ash::vk;
-use project_castaway::vulkan::utils::create_gpu_only_buffer_from_data;
-use project_castaway::vulkan::{
+use project_beacon::vulkan::utils::create_gpu_only_buffer_from_data;
+use project_beacon::vulkan::{
     Buffer, CommandBuffer, Context, GraphicsPipeline, GraphicsPipelineCreateInfo,
     GraphicsShaderCreateInfo, PipelineLayout,
 };
-use project_castaway::app::{App, BaseApp};
+use project_beacon::app::{App, BaseApp};
 
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 576;
 const APP_NAME: &str = "Triangle";
 
 fn main() -> Result<()> {
-    project_castaway::app::run::<Triangle>(APP_NAME, WIDTH, HEIGHT, false)
+    project_beacon::app::run::<Triangle>(APP_NAME, WIDTH, HEIGHT, false)
 }
 struct Triangle {
     vertex_buffer: Buffer,
@@ -82,7 +82,7 @@ struct Vertex {
     color: [f32; 3],
 }
 
-impl project_castaway::vulkan::Vertex for Vertex {
+impl project_beacon::vulkan::Vertex for Vertex {
     fn bindings() -> Vec<vk::VertexInputBindingDescription> {
         vec![vk::VertexInputBindingDescription {
             binding: 0,

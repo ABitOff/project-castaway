@@ -1,4 +1,4 @@
-use project_castaway::vulkan;
+use project_beacon::vulkan;
 
 #[test]
 fn test() {

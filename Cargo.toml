@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["workspace/*"]
+members = ["workspace/*", "workspace/project-beacon/proc-mac"]
 
 [workspace.package]
 version = "0.1.0"
@@ -38,6 +38,8 @@ anyhow = "1.0.75"
 ash = { version = "0.37.3", features = ["linked"] }
 ash-window = "0.12.0"
 glam = "0.24.2"
-gpu-allocator = { version = "0.24.0", default-features = false, features = ["vulkan"] }
+gpu-allocator = { version = "0.24.0", default-features = false, features = [
+    "vulkan"
+] }
 raw-window-handle = "0.5"
 winit = "0.27"

@@ -1,0 +1,17 @@
+[lib]
+proc-macro = true
+
+[package]
+name = "project-beacon-proc-mac"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+ash.workspace = true
+naga = { version = "0.14.0", features = ["glsl-in", "spv-out"] }
+quote = "1.0.33"
+syn = { version = "2.0.39", features = ["full"] }

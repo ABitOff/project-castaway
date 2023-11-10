@@ -2,18 +2,24 @@ use std::time::Duration;
 
 use anyhow::Result;
 use ash::vk;
+use project_beacon::app::{App, BaseApp};
 use project_beacon::vulkan::utils::create_gpu_only_buffer_from_data;
 use project_beacon::vulkan::{
     Buffer, CommandBuffer, Context, GraphicsPipeline, GraphicsPipelineCreateInfo,
     GraphicsShaderCreateInfo, PipelineLayout,
 };
-use project_beacon::app::{App, BaseApp};
+use project_beacon_proc_mac::include_shader;
 
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 576;
 const APP_NAME: &str = "Triangle";
 
 fn main() -> Result<()> {
+    include_shader!({
+        path: "123",
+        spv: true,
+        src: "123",
+    });
     project_beacon::app::run::<Triangle>(APP_NAME, WIDTH, HEIGHT, false)
 }
 struct Triangle {
@@ -43,12 +49,7 @@ impl App for Triangle {
         Ok(())
     }
 
-    fn update(
-        &mut self,
-        _: &BaseApp<Self>,
-        _: usize,
-        _: Duration,
-    ) -> Result<()> {
+    fn update(&mut self, _: &BaseApp<Self>, _: usize, _: Duration) -> Result<()> {
         Ok(())
     }
 

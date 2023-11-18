@@ -8,18 +8,35 @@ use project_beacon::vulkan::{
     Buffer, CommandBuffer, Context, GraphicsPipeline, GraphicsPipelineCreateInfo,
     GraphicsShaderCreateInfo, PipelineLayout,
 };
-use project_beacon_proc_mac::include_shader;
+use project_beacon_shader_macro::include_shader;
 
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 576;
 const APP_NAME: &str = "Triangle";
 
+include_shader! (
+    Test {
+        source: {
+            // file: "",
+            code: "\
+                #version 450\nlayout(location=0)in vec3 vPosition;layout(location=1)in vec3 vColor;\
+                layout(location=0)out vec3 oColor;void main(){oColor=vColor;gl_Position=\
+                vec4(vPosition.x,vPosition.y,vPosition.z,1.0);}\
+            ",
+            shader_stage: Vertex,
+            language: GLSL,
+            // spirv_version: a,
+            optimization: Performance,
+            macros: {
+                DEBUG: "None",
+                VERBOSE: "true",
+                RAY_SAMPLES: "12",
+            },
+        },
+    }
+);
+
 fn main() -> Result<()> {
-    include_shader!({
-        path: "123",
-        spv: true,
-        src: "123",
-    });
     project_beacon::app::run::<Triangle>(APP_NAME, WIDTH, HEIGHT, false)
 }
 struct Triangle {

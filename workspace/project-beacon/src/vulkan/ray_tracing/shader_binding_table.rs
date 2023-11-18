@@ -2,7 +2,9 @@ use anyhow::Result;
 use ash::vk;
 use gpu_allocator::MemoryLocation;
 
-use crate::vulkan::{utils::compute_aligned_size, Buffer, Context, RayTracingContext, RayTracingPipeline};
+use crate::vulkan::{
+    utils::compute_aligned_size, Buffer, Context, RayTracingContext, RayTracingPipeline,
+};
 
 pub struct ShaderBindingTable {
     _buffer: Buffer,

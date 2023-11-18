@@ -3,13 +3,13 @@ pub mod camera;
 use anyhow::Result;
 use ash::vk::{self};
 // use camera::{Camera, Controls};
+use crate::vulkan::*;
 use glam::vec3;
 use gpu_allocator::MemoryLocation;
 use std::{
     marker::PhantomData,
     time::{Duration, Instant},
 };
-use crate::vulkan::*;
 use winit::{
     dpi::PhysicalSize,
     event::{ElementState, Event, KeyboardInput, MouseButton, VirtualKeyCode, WindowEvent},
@@ -313,12 +313,7 @@ impl<B: App> BaseApp<B> {
         self.context.device_wait_idle()
     }
 
-    fn draw(
-        &mut self,
-        _: &Window,
-        base_app: &mut B,
-        frame_stats: &mut FrameStats,
-    ) -> Result<bool> {
+    fn draw(&mut self, _: &Window, base_app: &mut B, frame_stats: &mut FrameStats) -> Result<bool> {
         // Drawing the frame
         self.in_flight_frames.next();
         self.in_flight_frames.fence().wait(None)?;
@@ -349,11 +344,7 @@ impl<B: App> BaseApp<B> {
 
         let command_buffer = &self.command_buffers[image_index];
 
-        self.record_command_buffer(
-            command_buffer,
-            image_index,
-            base_app,
-        )?;
+        self.record_command_buffer(command_buffer, image_index, base_app)?;
 
         self.context.graphics_queue.submit(
             command_buffer,
@@ -711,4 +702,3 @@ impl<T> Queue<T> {
         self.0.push(value);
     }
 }
-

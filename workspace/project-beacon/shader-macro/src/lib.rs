@@ -37,8 +37,6 @@ project_beacon_macro_args_macro::parseable! {
             binary: BinaryInfo,
         },
     }
-
-    Config
 }
 
 struct ShaderStructInfo {

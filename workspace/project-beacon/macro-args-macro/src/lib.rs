@@ -17,28 +17,16 @@ pub fn parseable(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
 
 struct MacroStructure {
     structs: Vec<Struct>,
-    root_struct: Ident,
 }
 
 impl Parse for MacroStructure {
     fn parse(input: syn::parse::ParseStream) -> Result<Self> {
         let mut structs = Vec::new();
-        let root_struct = loop {
-            if input.peek2(token::Brace) {
-                structs.push(input.parse::<Struct>()?);
-            } else {
-                let rs = input.parse::<Ident>()?;
-                if !input.is_empty() {
-                    return Err(input.error("Unexpected token!"));
-                }
-                break rs;
-            }
-        };
+        while !input.is_empty() {
+            structs.push(input.parse::<Struct>()?);
+        }
 
-        Ok(Self {
-            structs,
-            root_struct,
-        })
+        Ok(Self { structs })
     }
 }
 
@@ -47,7 +35,6 @@ impl ToTokens for MacroStructure {
         for s in &self.structs {
             s.to_tokens(tokens);
         }
-        self.root_struct.to_tokens(tokens);
     }
 }
 
@@ -132,7 +119,7 @@ impl Struct {
                 fn parse(input: ::syn::parse::ParseStream) -> ::syn::Result<Self> {
                     #group_tracks
                     let mut field_tracker: (#field_tracks_type) = (#field_tracks_value);
-                    let brace = syn::__private::parse_braces(&input)?;
+                    let brace = ::syn::__private::parse_braces(&input)?;
                     let #parse_stream_ident = brace.content;
                     // let brace = brace.token;
                     while !#parse_stream_ident.is_empty() {
@@ -182,7 +169,7 @@ impl Parse for StructFieldSection {
             let bracket = syn::bracketed!(content in input);
             let ident = content.parse::<Ident>()?;
             if !content.is_empty() {
-                return Err(content.error("Unexpected token!"));
+                return Err(content.error("Unexpected token"));
             }
             let content;
             let brace = syn::braced!(content in input);
@@ -529,7 +516,9 @@ impl Types {
 
     fn default_tokens(&self) -> Option<TokenStream> {
         match self {
-            Self::Str(_, d) => d.as_ref().map(|(_, d)| quote! {#d.to_string()}.into_token_stream()),
+            Self::Str(_, d) => d
+                .as_ref()
+                .map(|(_, d)| quote! {#d.to_string()}.into_token_stream()),
             Self::ByteStr(_, d) => d.as_ref().map(|(_, d)| quote! {#d}.into_token_stream()),
             Self::Struct(_) => None,
             Self::Enum(_, path, _, _, d) => d
@@ -560,7 +549,7 @@ impl Types {
                 }
                 let option_strings = option_strings.join(", ");
                 quote! {
-                    let ident = #parse_stream_ident.parse::<Ident>()?;
+                    let ident = #parse_stream_ident.parse::<::syn::Ident>()?;
                     let ident_string = ident.to_string();
                     match ident_string.as_str() {
                         #enum_options_matches
@@ -594,5 +583,14 @@ impl Types {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test() {
+        let a = syn::parse::<crate::MacroStructure>(quote::quote! {}.into());
+        let a = crate::parseable(quote::quote! {Abc{}}.into());
     }
 }

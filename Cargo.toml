@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["workspace/*", "workspace/project-beacon/*-macro"]
+members = ["workspace/project-*", "workspace/macros/*"]
 
 [workspace.package]
 version = "0.1.0"

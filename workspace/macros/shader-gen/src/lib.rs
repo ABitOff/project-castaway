@@ -7,7 +7,7 @@ use syn::{
     Ident, Result,
 };
 
-project_beacon_macro_args_macro::parseable! {
+parseable::parseable! {
     BinaryInfo {
         entry_point: String,
         #[exclusive_group] {

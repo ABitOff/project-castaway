@@ -594,43 +594,55 @@ impl Types {
 
 #[cfg(test)]
 mod tests {
-    use proc_macro_utils::assert_expansion;
     use crate::_parseable;
+    use proc_macro_utils::assert_expansion;
 
     #[test]
     fn test() {
-        assert_expansion!(
-            _parseable!{
-                Test{}
-            }, {
-                struct Test{}
-                impl ::syn::parse::Parse for Test {
-                    fn parse(input: ::syn::parse::ParseStream) -> ::syn::Result<Self> {
-                        let mut field_tracker: () = ();
-                        let brace = ::syn::__private::parse_braces(&input)?;
-                        let content = brace.content;
-                        while !content.is_empty() {
-                            let ident = content.parse::<::syn::Ident>()?;
-                            let field_name = ident.to_string();
-                            match field_name.as_str() {
-                                _ => {
-                                    return ::std::result::Result::Err(
-                                        ::syn::Error::new_spanned(
-                                            ident,
-                                            ::std::format!("Unexpected field: {}" , field_name)
-                                        )
-                                    );
-                                }
-                            }
-                            if content.is_empty() {
-                                break;
-                            }
-                            content.parse::<::syn::token::Comma>()?;
-                        }
-                        Ok(Self{})
+        println!(
+            "{}",
+            _parseable(
+                <::proc_macro2::TokenStream as ::core::str::FromStr>::from_str(::core::stringify!(
+                    Test {
+                        a: enum Abc[Hey ^ & Lol; Wow],
                     }
-                }
-            }
+                ))
+                .unwrap()
+            )
         );
+        assert_expansion!(
+            _parseable! {
+                Test ()
+            },
+            {}
+        );
+
+        // struct Test{}
+        // impl ::syn::parse::Parse for Test {
+        //     fn parse(input: ::syn::parse::ParseStream) -> ::syn::Result<Self> {
+        //         let mut field_tracker: () = ();
+        //         let brace = ::syn::__private::parse_braces(&input)?;
+        //         let content = brace.content;
+        //         while !content.is_empty() {
+        //             let ident = content.parse::<::syn::Ident>()?;
+        //             let field_name = ident.to_string();
+        //             match field_name.as_str() {
+        //                 _ => {
+        //                     return ::std::result::Result::Err(
+        //                         ::syn::Error::new_spanned(
+        //                             ident,
+        //                             ::std::format!("Unexpected field: {}" , field_name)
+        //                         )
+        //                     );
+        //                 }
+        //             }
+        //             if content.is_empty() {
+        //                 break;
+        //             }
+        //             content.parse::<::syn::token::Comma>()?;
+        //         }
+        //         Ok(Self{})
+        //     }
+        // }
     }
 }

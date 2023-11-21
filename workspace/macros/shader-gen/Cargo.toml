@@ -2,7 +2,7 @@
 proc-macro = true
 
 [package]
-name = "project-beacon-shader-macro"
+name = "shader-gen"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
@@ -17,4 +17,4 @@ quote = "1.0.33"
 shaderc = "0.8.2"
 spirvcross = { version = "0.1.1", features = ["glsl", "hlsl", "msl"] }
 syn = { version = "2.0.39", features = ["full"] }
-project-beacon-macro-args-macro = { path = "../macro-args-macro" }
+parseable = { path = "../parseable" }

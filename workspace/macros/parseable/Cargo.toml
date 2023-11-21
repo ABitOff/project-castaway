@@ -2,7 +2,7 @@
 proc-macro = true
 
 [package]
-name = "project-beacon-macro-args-macro"
+name = "parseable"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true

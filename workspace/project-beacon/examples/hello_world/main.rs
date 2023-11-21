@@ -8,7 +8,7 @@ use project_beacon::vulkan::{
     Buffer, CommandBuffer, Context, GraphicsPipeline, GraphicsPipelineCreateInfo,
     GraphicsShaderCreateInfo, PipelineLayout,
 };
-use project_beacon_shader_macro::include_shader;
+use shader_gen::include_shader;
 
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 576;

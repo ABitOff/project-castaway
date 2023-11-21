@@ -1,3 +1,5 @@
+#![recursion_limit = "1024"]
+
 use proc_macro2::{Ident, TokenStream};
 use quote::{format_ident, quote, ToTokens};
 use syn::{
@@ -9,7 +11,11 @@ use syn::{
 
 #[proc_macro]
 pub fn parseable(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    syn::parse::<MacroStructure>(input)
+    _parseable(input.into()).into()
+}
+
+fn _parseable(input: proc_macro2::TokenStream) -> proc_macro2::TokenStream {
+    syn::parse2::<MacroStructure>(input.into())
         .and_then(MacroStructure::into_tokens)
         .map_err(syn::Error::into_compile_error)
         .map_or_else(Into::into, Into::into)
@@ -588,9 +594,43 @@ impl Types {
 
 #[cfg(test)]
 mod tests {
+    use proc_macro_utils::assert_expansion;
+    use crate::_parseable;
+
     #[test]
     fn test() {
-        let a = syn::parse::<crate::MacroStructure>(quote::quote! {}.into());
-        let a = crate::parseable(quote::quote! {Abc{}}.into());
+        assert_expansion!(
+            _parseable!{
+                Test{}
+            }, {
+                struct Test{}
+                impl ::syn::parse::Parse for Test {
+                    fn parse(input: ::syn::parse::ParseStream) -> ::syn::Result<Self> {
+                        let mut field_tracker: () = ();
+                        let brace = ::syn::__private::parse_braces(&input)?;
+                        let content = brace.content;
+                        while !content.is_empty() {
+                            let ident = content.parse::<::syn::Ident>()?;
+                            let field_name = ident.to_string();
+                            match field_name.as_str() {
+                                _ => {
+                                    return ::std::result::Result::Err(
+                                        ::syn::Error::new_spanned(
+                                            ident,
+                                            ::std::format!("Unexpected field: {}" , field_name)
+                                        )
+                                    );
+                                }
+                            }
+                            if content.is_empty() {
+                                break;
+                            }
+                            content.parse::<::syn::token::Comma>()?;
+                        }
+                        Ok(Self{})
+                    }
+                }
+            }
+        );
     }
 }

@@ -1606,6 +1606,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "proc-macro-utils"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f59e109e2f795a5070e69578c4dc101068139f74616778025ae1011d4cd41a8"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "smallvec",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1636,6 +1647,7 @@ dependencies = [
 name = "project-beacon-macro-args-macro"
 version = "0.1.0"
 dependencies = [
+ "proc-macro-utils",
  "proc-macro2",
  "quote",
  "syn 2.0.39",

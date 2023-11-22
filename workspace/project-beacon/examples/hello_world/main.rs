@@ -14,7 +14,7 @@ const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 576;
 const APP_NAME: &str = "Triangle";
 
-include_shader! (
+include_shader! {
     Test {
         source: {
             // file: "",
@@ -23,10 +23,10 @@ include_shader! (
                 layout(location=0)out vec3 oColor;void main(){oColor=vColor;gl_Position=\
                 vec4(vPosition.x,vPosition.y,vPosition.z,1.0);}\
             ",
-            shader_stage: Vertex,
-            language: GLSL,
+            // shader_stage: Vertex,
+            // language: GLSL,
             // spirv_version: a,
-            optimization: Performance,
+            // optimization: Performance,
             macros: {
                 DEBUG: "None",
                 VERBOSE: "true",
@@ -34,7 +34,7 @@ include_shader! (
             },
         },
     }
-);
+}
 
 fn main() -> Result<()> {
     project_beacon::app::run::<Triangle>(APP_NAME, WIDTH, HEIGHT, false)

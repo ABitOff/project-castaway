@@ -42,5 +42,5 @@ gpu-allocator = { version = "0.24.0", default-features = false, features = [
     "vulkan"
 ] }
 raw-window-handle = "0.5"
-shaderc = { version = "0.8.2", features = ["build-from-source"] }
+shaderc = "0.8.2"
 winit = "0.27"

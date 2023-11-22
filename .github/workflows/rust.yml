@@ -33,10 +33,12 @@ jobs:
       uses: actions-rs/toolchain@v1.0.6
       with:
         toolchain: stable
+    - name: Cargo clean
+      run: cargo clean
     - name: Install tarpaulin
       run: node ./scripts/gh-actions/tarpaulin_reinstall_check.js
     - name: Build
-      run: cargo build --lib --examples --tests --verbose
+      run: cargo build
     - name: Run tests
       run: cargo test --verbose
     - name: Coverage

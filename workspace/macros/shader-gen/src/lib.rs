@@ -1,6 +1,6 @@
 extern crate proc_macro;
 
-use shaderc;
+// use shaderc;
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{
@@ -23,12 +23,12 @@ parseable::parseable! {
             code: String,
         },
         entry_point: String; "main",
-        shader_stage: enum crate::shaderc::ShaderKind[Vertex, Fragment, Compute, Geometry, TessControl, TessEvaluation,
-            SpirvAssembly, RayGeneration, AnyHit, ClosestHit, Miss, Intersection, Callable, Task, Mesh;
-            InferFromSource],
-        language: enum crate::shaderc::SourceLanguage[GLSL, HLSL; GLSL],
-        spirv_version: enum crate::shaderc::SpirvVersion[V1_0, V1_1, V1_2, V1_3, V1_4, V1_5, V1_6; V1_6],
-        optimization: enum crate::shaderc::OptimizationLevel[Zero, Size, Performance; Performance],
+        // shader_stage: enum crate::shaderc::ShaderKind[Vertex, Fragment, Compute, Geometry, TessControl, TessEvaluation,
+        //     SpirvAssembly, RayGeneration, AnyHit, ClosestHit, Miss, Intersection, Callable, Task, Mesh;
+        //     InferFromSource],
+        // language: enum crate::shaderc::SourceLanguage[GLSL, HLSL; GLSL],
+        // spirv_version: enum crate::shaderc::SpirvVersion[V1_0, V1_1, V1_2, V1_3, V1_4, V1_5, V1_6; V1_6],
+        // optimization: enum crate::shaderc::OptimizationLevel[Zero, Size, Performance; Performance],
         macros?: map,
     }
 

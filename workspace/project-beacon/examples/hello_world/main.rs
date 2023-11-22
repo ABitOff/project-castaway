@@ -23,10 +23,10 @@ include_shader! {
                 layout(location=0)out vec3 oColor;void main(){oColor=vColor;gl_Position=\
                 vec4(vPosition.x,vPosition.y,vPosition.z,1.0);}\
             ",
-            shader_stage: Vertex,
-            language: GLSL,
-            spirv_version: V1_6,
-            optimization: Performance,
+            // shader_stage: Vertex,
+            // language: GLSL,
+            // spirv_version: V1_6,
+            // optimization: Performance,
             macros: {
                 DEBUG: "None",
                 VERBOSE: "true",

@@ -27,5 +27,6 @@ ash-window.workspace = true
 glam.workspace = true
 gpu-allocator.workspace = true
 raw-window-handle.workspace = true
-winit.workspace = true
 shader-gen = { path = "../macros/shader-gen" }
+shaderc.workspace = true
+winit.workspace = true

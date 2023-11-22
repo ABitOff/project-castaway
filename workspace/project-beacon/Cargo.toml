@@ -1,5 +1,4 @@
 [package]
-resolver = "2"
 name = "project-beacon"
 version.workspace = true
 authors.workspace = true

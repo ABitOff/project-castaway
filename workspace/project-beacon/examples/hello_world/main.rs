@@ -1,5 +1,3 @@
-extern crate shader_gen;
-
 use std::time::Duration;
 
 use anyhow::Result;

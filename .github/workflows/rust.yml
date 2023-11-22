@@ -40,7 +40,7 @@ jobs:
     - name: Build
       run: cargo build
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test
     - name: Coverage
       run: cargo tarpaulin --all-features --color always --count -o Lcov -t 120 -v
     - name: Upload to codecov.io

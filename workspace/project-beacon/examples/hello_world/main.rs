@@ -37,6 +37,8 @@ include_shader! {
 }
 
 fn main() -> Result<()> {
+    let compiler = shaderc::Compiler::new();
+    assert!(compiler.is_some());
     project_beacon::app::run::<Triangle>(APP_NAME, WIDTH, HEIGHT, false)
 }
 struct Triangle {

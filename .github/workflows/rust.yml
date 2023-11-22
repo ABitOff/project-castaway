@@ -10,7 +10,7 @@ jobs:
   build-test-cover:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout

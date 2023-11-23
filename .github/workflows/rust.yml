@@ -5,6 +5,7 @@ on: ["push", "pull_request"]
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: true
+  RUSTFLAGS: -C target-feature=+crt-static
 
 jobs:
   build-test-cover:
@@ -19,7 +20,6 @@ jobs:
       uses: humbletim/install-vulkan-sdk@v1.1.1
       with:
         cache: true
-        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang, SPIRV-Cross, SPIRV-Tools, SPIRV-Reflect, SPIRV-Headers
     - name: Fetch cache
       uses: actions/cache@v3
       with:
@@ -30,18 +30,10 @@ jobs:
           ~/.cargo/git/db/
           target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - name: Get Cmake
-      uses: lukka/get-cmake@fix-issue-91
-    - name: Setup Python
-      uses: actions/setup-python@v4.7.1
-      with:
-        python-version: 3
     - name: rust-toolchain
       uses: actions-rs/toolchain@v1.0.6
       with:
         toolchain: stable
-    - name: Cargo clean
-      run: cargo clean
     - name: Install tarpaulin
       run: node ./scripts/gh-actions/tarpaulin_reinstall_check.js
     - name: Build

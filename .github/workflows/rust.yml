@@ -5,7 +5,6 @@ on: ["push", "pull_request"]
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: true
-  RUSTFLAGS: -C target-feature=+crt-static
 
 jobs:
   build-test-cover:
@@ -20,6 +19,9 @@ jobs:
       uses: humbletim/install-vulkan-sdk@v1.1.1
       with:
         cache: true
+    - name: Update LD_LIBRARY_PATH
+      shell: bash
+      run: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$VULKAN_SDK/lib
     - name: Fetch cache
       uses: actions/cache@v3
       with:

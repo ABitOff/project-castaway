@@ -42,5 +42,7 @@ gpu-allocator = { version = "0.24.0", default-features = false, features = [
     "vulkan"
 ] }
 raw-window-handle = "0.5"
-shaderc = "0.8.2"
+shaderc = { git = "https://github.com/ABitOff/shaderc-rs.git", branch = "prefer-static-linking", features = [
+    "prefer-static-linking"
+] }
 winit = "0.27"

@@ -1055,6 +1055,7 @@ dependencies = [
  "parseable",
  "proc-macro2",
  "quote",
+ "shaderc",
  "syn 2.0.39",
 ]
 

@@ -810,7 +810,6 @@ dependencies = [
 name = "parseable"
 version = "0.1.0"
 dependencies = [
- "proc-macro-utils",
  "proc-macro2",
  "quote",
  "syn 2.0.39",
@@ -855,17 +854,6 @@ checksum = "7f4c021e1093a56626774e81216a4ce732a735e5bad4868a03f3ed65ca0c3919"
 dependencies = [
  "once_cell",
  "toml_edit",
-]
-
-[[package]]
-name = "proc-macro-utils"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3f59e109e2f795a5070e69578c4dc101068139f74616778025ae1011d4cd41a8"
-dependencies = [
- "proc-macro2",
- "quote",
- "smallvec",
 ]
 
 [[package]]

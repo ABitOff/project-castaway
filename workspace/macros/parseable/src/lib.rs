@@ -1,5 +1,3 @@
-#![recursion_limit = "1024"]
-
 use proc_macro2::{Ident, TokenStream};
 use quote::{format_ident, quote, ToTokens};
 use syn::{
@@ -95,7 +93,7 @@ impl Struct {
         let field_name_ident = format_ident!("field_name");
         let parse_stream_ident = format_ident!("content");
         let mut field_index = 0;
-        for (i, f) in self.fields.iter().enumerate() {
+        for (i, f) in self.fields.into_iter().enumerate() {
             if i > 0 {
                 quote! {,}.to_tokens(&mut struct_fields_defs);
                 quote! {,}.to_tokens(&mut field_tracks_type);
@@ -103,7 +101,7 @@ impl Struct {
                 quote! {,}.to_tokens(&mut struct_constructor_fields);
             }
 
-            f.contribute_tokens(
+            f.into_tokens(
                 &mut struct_fields_defs,
                 &mut group_tracks,
                 i,
@@ -203,8 +201,8 @@ impl ToTokens for StructFieldSection {
 }
 
 impl StructFieldSection {
-    fn contribute_tokens(
-        &self,
+    fn into_tokens(
+        self,
         struct_fields_defs: &mut TokenStream,
         group_tracks: &mut TokenStream,
         group_id: usize,
@@ -218,14 +216,16 @@ impl StructFieldSection {
         non_optional_handling: &mut TokenStream,
         struct_constructor_fields: &mut TokenStream,
     ) {
+        let group_track_ident = format_ident!("group_{}", group_id);
+
         let (group, group_field_names) = match self {
             Self::Field(f) => (vec![f], None),
-            Self::Group(_, _, _, _, punc) => (
-                punc.iter().collect(),
-                Some(punc.iter().map(|f| f.ident.to_string()).collect::<Vec<_>>()),
-            ),
+            Self::Group(_, _, _, _, punc) => {
+                let field_names = punc.iter().map(|f| f.ident.to_string()).collect::<Vec<_>>();
+                (punc.into_iter().collect(), Some(field_names))
+            }
         };
-        for (i, f) in group.iter().enumerate() {
+        for (i, f) in group.into_iter().enumerate() {
             if i > 0 {
                 quote! {,}.to_tokens(struct_fields_defs);
                 quote! {,}.to_tokens(field_tracks_type);
@@ -233,24 +233,7 @@ impl StructFieldSection {
                 quote! {,}.to_tokens(struct_constructor_fields);
             }
 
-            let group_track_ident = format_ident!("group_{}", group_id);
-            quote! {let mut #group_track_ident = false;}.to_tokens(group_tracks);
-            if let Some(fields) = &group_field_names {
-                let fields = fields.join(", ");
-                quote! {
-                    if !#group_track_ident {
-                        return ::std::result::Result::Err(
-                            ::syn::Error::new(
-                                ::proc_macro2::Span::call_site(),
-                                ::std::format!("Exactly one of {} is required.", #fields)
-                            )
-                        );
-                    }
-                }
-                .to_tokens(non_optional_handling);
-            }
-
-            f.contribute_tokens(
+            f.into_tokens(
                 struct_fields_defs,
                 field_tracks_type,
                 field_tracks_value,
@@ -266,6 +249,22 @@ impl StructFieldSection {
             );
 
             *field_index += 1;
+        }
+
+        quote! {let mut #group_track_ident = false;}.to_tokens(group_tracks);
+        if let Some(fields) = &group_field_names {
+            let fields = fields.join(", ");
+            quote! {
+                if !#group_track_ident {
+                    return ::std::result::Result::Err(
+                        ::syn::Error::new(
+                            ::proc_macro2::Span::call_site(),
+                            ::std::format!("Exactly one of {} is required.", #fields)
+                        )
+                    );
+                }
+            }
+            .to_tokens(non_optional_handling);
         }
     }
 }
@@ -305,8 +304,8 @@ impl ToTokens for Field {
 }
 
 impl Field {
-    fn contribute_tokens(
-        &self,
+    fn into_tokens(
+        self,
         struct_fields_defs: &mut TokenStream,
         field_tracks_type: &mut TokenStream,
         field_tracks_value: &mut TokenStream,
@@ -360,7 +359,7 @@ impl Field {
             quote! {::std::format!("Duplicate field: {}", #ident_string)}
         };
 
-        let parse_tokens = self.field_type.to_parse_tokens(parse_stream_ident);
+        let parse_tokens = self.field_type.into_parse_tokens(parse_stream_ident);
 
         quote! {
             #ident_string => {
@@ -534,8 +533,8 @@ impl Types {
         }
     }
 
-    fn to_parse_tokens(&self, parse_stream_ident: &Ident) -> TokenStream {
-        match &self {
+    fn into_parse_tokens(self, parse_stream_ident: &Ident) -> TokenStream {
+        match self {
             Self::Str(_, _) => {
                 quote! {#parse_stream_ident.parse::<::syn::LitStr>()?.value()}
             }
@@ -595,41 +594,44 @@ impl Types {
 #[cfg(test)]
 mod tests {
     use crate::_parseable;
-    use proc_macro_utils::assert_expansion;
 
     #[test]
     fn test() {
-        assert_expansion!(
-            _parseable! {
-                Test {}
-            },
-            {
-                struct Test {}
-                impl ::syn::parse::Parse for Test {
-                    fn parse(input: ::syn::parse::ParseStream) -> ::syn::Result<Self> {
-                        let mut field_tracker: () = ();
-                        let brace = ::syn::__private::parse_braces(&input)?;
-                        let content = brace.content;
-                        while !content.is_empty() {
-                            let ident = content.parse::<::syn::Ident>()?;
-                            let field_name = ident.to_string();
-                            match field_name.as_str() {
-                                _ => {
-                                    return ::std::result::Result::Err(::syn::Error::new_spanned(
-                                        ident,
-                                        ::std::format!("Unexpected field: {}", field_name)
-                                    ));
-                                }
-                            }
-                            if content.is_empty() {
-                                break;
-                            }
-                            content.parse::<::syn::token::Comma>()?;
-                        }
-                        Ok(Self {})
+        let tokens = _parseable(
+            <proc_macro2::TokenStream as std::str::FromStr>::from_str(stringify!(
+                Foo {
+                    a: String,
+                    b: ByteString,
+                    c: Bar,
+                    d: enum a::b::Enum[A, B, C],
+                    e: map,
+                    a2?: String,
+                    b2?: ByteString,
+                    c2?: Bar,
+                    d2?: enum a::b::Enum[A, B, C],
+                    e2?: map,
+                    a3: String; "ABC123",
+                    b3: ByteString; b"123abc\x00",
+                    d3: enum a::b::Enum[A, B, C; B],
+                    #[exclusive_group] {
+                        a_e: String,
+                        b_e: ByteString,
+                        c_e: Bar,
+                        d_e: enum a::b::Enum[A, B, C],
+                        e_e: map,
                     }
                 }
-            }
+
+                Bar {
+                    bar: String,
+                }
+            ))
+            .unwrap(),
+        );
+
+        assert_eq!(
+            tokens.to_string(),
+            include_str!("../test_result.txt").to_string()
         );
     }
 }
